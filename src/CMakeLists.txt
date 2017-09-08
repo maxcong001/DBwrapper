@@ -15,7 +15,7 @@ INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
 
 # Include sub directory adapters and utils.
 #ADD_SUBDIRECTORY(utils)
-add_subdirectory(thirdparty)
+
 
 # Collect all source files.
 file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp *.c)
