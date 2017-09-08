@@ -11,3 +11,9 @@ there will be the following part:
 ## this project aimed to only depends on libevnet and C++11.
 
 ## will realize redis suport
+
+
+NOTE:you need to run :
+git submodule foreach --recursive git submodule init
+git submodule foreach --recursive git submodule update 
+while clone this rep
