@@ -3,12 +3,10 @@ this project will be a wrapper of DB.
 
 there will be the following part:
 ```
-1. command parser
-2. DBmessage format
-3. connection management
-4. timer service
-5. message bus service
-6. service discovery part
+1. command parser(hold)
+3. connection management(https://github.com/maxcong001/connection_manager)
+4. timer service(doing)(https://github.com/maxcong001/timer)
+6. service discovery part(hold)
 ```
 ## this project aimed to only depends on libevnet and C++11.
 
