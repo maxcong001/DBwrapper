@@ -15,6 +15,7 @@ there will be the following part:
 
 NOTE:you need to run :
 ```
+git submodule update --init --recursive
 git submodule foreach --recursive git submodule init
 git submodule foreach --recursive git submodule update 
 ```
