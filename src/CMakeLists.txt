@@ -46,11 +46,25 @@ SET_TARGET_PROPERTIES(
 		VERSION ${M_VERSION}
 )
 
+
+find_library(TRANSLIB_LIBRARY translib)
+find_library(TACOPIE_LIBRARY tacopie)
+find_library(CPP_REDIS_LIBRARY cpp_redis)
+
 LINK_DIRECTORIES(${PROJECT_SOURCE_DIR}/lib)
+
 IF(NOT ENABLE_TEST)
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} pthread)
+	if(CPP_REDIS_LIBRARY)
+		target_link_libraries(${PROJECT} ${TRANSLIB_LIBRARY} $TACOPIE_LIBRARY $CPP_REDIS_LIBRARY pthread)
+	else() 
+		target_link_libraries(${PROJECT} translib tacopie cpp_redis pthread)
+	endif()
 ELSE()
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} pthread)
+	if(CPP_REDIS_LIBRARY)
+		target_link_libraries(${PROJECT} ${TRANSLIB_LIBRARY} $TACOPIE_LIBRARY $CPP_REDIS_LIBRARY pthread)
+	else() 
+		target_link_libraries(${PROJECT} translib tacopie cpp_redis pthread)
+	endif()
 ENDIF()
 
 # Install lib to /usr/local/lib by default

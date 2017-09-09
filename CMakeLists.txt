@@ -1,4 +1,4 @@
-PROJECT(M_empty)
+PROJECT(MaxDbwrapper)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 #FIND_PACKAGE(libevnet REQUIRED)
 
@@ -37,20 +37,21 @@ add_subdirectory(thirdparty/cpp_redis)
 add_subdirectory(thirdparty/translib)
 ADD_SUBDIRECTORY(src)
 IF(ENABLE_TEST)
-    ADD_SUBDIRECTORY(example)
-    ADD_SUBDIRECTORY(test)
+    ADD_SUBDIRECTORY(examples)
+    ADD_SUBDIRECTORY(tests)
 ENDIF()
+
 
 SEPARATE_ARGUMENTS(CMD_ARGS)
 # ADD_TEST(delivery_test ${PROJECT_SOURCE_DIR}/bin/${TEST_BINARY})
 
-ADD_CUSTOM_TARGET(example
+ADD_CUSTOM_TARGET(exampless
 	COMMAND ./${EXAMPLE_BINARY} ${CMD_ARGS}
 	WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
 	COMMENT "Run examples"
 )
 
-ADD_CUSTOM_TARGET(tests
+ADD_CUSTOM_TARGET(testss
         COMMAND ./${TESTS_BINARY} ${CMD_ARGS}
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
         COMMENT "Run tests"
@@ -58,7 +59,7 @@ ADD_CUSTOM_TARGET(tests
 
 
 
-ADD_CUSTOM_TARGET(memcheck
+ADD_CUSTOM_TARGET(memcheckss
 	COMMAND command -v valgrind >/dev/null 2>&1 && valgrind -v --leak-check=full --show-reachable=yes
 	--undef-value-errors=yes --track-origins=yes --num-callers=50 ./${EXAMPLE_BINARY} ${CMD_ARGS}
 	WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
@@ -66,7 +67,7 @@ ADD_CUSTOM_TARGET(memcheck
 )
 
 
-ADD_CUSTOM_TARGET(cleanup
+ADD_CUSTOM_TARGET(cleanupss
 	COMMAND rm -rf *
 	WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
 	COMMENT "Remove all temp files"

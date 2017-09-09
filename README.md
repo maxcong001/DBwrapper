@@ -14,6 +14,8 @@ there will be the following part:
 
 
 NOTE:you need to run :
+```
 git submodule foreach --recursive git submodule init
 git submodule foreach --recursive git submodule update 
-while clone this rep
+```
+while cloning this rep
