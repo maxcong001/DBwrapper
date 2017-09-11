@@ -1,6 +1,0 @@
-[submodule "thirdparty/translib"]
-	path = thirdparty/translib
-	url = https://github.com/maxcong001/translib.git
-[submodule "thirdparty/cpp_redis"]
-	path = thirdparty/cpp_redis
-	url = https://github.com/Cylix/cpp_redis.git

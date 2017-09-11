@@ -1,4 +1,4 @@
-PROJECT(MaxDbwrapper)
+PROJECT(M_empty)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 #FIND_PACKAGE(libevnet REQUIRED)
 
@@ -33,33 +33,23 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CCXX_FLAGS}")
 MESSAGE(STATUS "start build")
 MESSAGE(STATUS "CMAKE_CXX_FLAGS: " ${CMAKE_CXX_FLAGS})
 
-add_subdirectory(thirdparty/cpp_redis)
-add_subdirectory(thirdparty/translib)
+
 ADD_SUBDIRECTORY(src)
 IF(ENABLE_TEST)
-    ADD_SUBDIRECTORY(examples)
-    ADD_SUBDIRECTORY(tests)
+    ADD_SUBDIRECTORY(example)
+    ADD_SUBDIRECTORY(test)
 ENDIF()
-
-
-# outputs
-###
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_PKGCONFIG_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/pkgconfig)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
 
 SEPARATE_ARGUMENTS(CMD_ARGS)
 # ADD_TEST(delivery_test ${PROJECT_SOURCE_DIR}/bin/${TEST_BINARY})
 
-ADD_CUSTOM_TARGET(exampless
+ADD_CUSTOM_TARGET(example
 	COMMAND ./${EXAMPLE_BINARY} ${CMD_ARGS}
 	WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
 	COMMENT "Run examples"
 )
 
-ADD_CUSTOM_TARGET(testss
+ADD_CUSTOM_TARGET(tests
         COMMAND ./${TESTS_BINARY} ${CMD_ARGS}
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
         COMMENT "Run tests"
@@ -67,7 +57,7 @@ ADD_CUSTOM_TARGET(testss
 
 
 
-ADD_CUSTOM_TARGET(memcheckss
+ADD_CUSTOM_TARGET(memcheck
 	COMMAND command -v valgrind >/dev/null 2>&1 && valgrind -v --leak-check=full --show-reachable=yes
 	--undef-value-errors=yes --track-origins=yes --num-callers=50 ./${EXAMPLE_BINARY} ${CMD_ARGS}
 	WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
@@ -75,7 +65,7 @@ ADD_CUSTOM_TARGET(memcheckss
 )
 
 
-ADD_CUSTOM_TARGET(cleanupss
+ADD_CUSTOM_TARGET(cleanup
 	COMMAND rm -rf *
 	WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
 	COMMENT "Remove all temp files"
