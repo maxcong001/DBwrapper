@@ -26,6 +26,8 @@
 #pragma once
 #include "connManager/util.h"
 #include "connManager/connManager.h"
+#include "cpp_redis/cpp_redis"
+
 
 template <typename connInfo>
 class RedisConn : public std::enable_shared_from_this<RedisConn<connInfo>>
@@ -42,7 +44,7 @@ class RedisConn : public std::enable_shared_from_this<RedisConn<connInfo>>
 
     void onConnected()
     {
-        __LOG(debug, "enter. connection id is : " << get_conn_inc_id()<<" pool index is : "<< get_pool_index());
+        __LOG(debug, "enter. connection id is : " << get_conn_inc_id() << " pool index is : " << get_pool_index());
         set_conn_state(true);
         // tell pool that there is a new connection
         auto bus = message_bus<connPool<RedisConn<connInfo>>>::instance();
@@ -51,7 +53,7 @@ class RedisConn : public std::enable_shared_from_this<RedisConn<connInfo>>
 
     void onDisconnected(int error)
     {
-        __LOG(debug, "enter. connection id is : " << get_conn_inc_id()<<" pool index is : "<< get_pool_index());
+        __LOG(debug, "enter. connection id is : " << get_conn_inc_id() << " pool index is : " << get_pool_index());
         set_conn_state(false);
         // tell pool that a connection is deleted
         auto bus = message_bus<connPool<RedisConn<connInfo>>>::instance();
@@ -80,4 +82,6 @@ class RedisConn : public std::enable_shared_from_this<RedisConn<connInfo>>
     bool conn_state;
     int conn_inc_id;
     int conn_dec_id;
+
+    cpp_redis::redis_client client;
 };
