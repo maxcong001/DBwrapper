@@ -106,16 +106,3 @@ void set_log_level(logger_iface::log_level level);
 #else
 #define __LOG(level, msg)
 #endif /* __LOGGING_ENABLED */
-
-//! convenience macro to log with file and line information
-#ifdef __TACOPIE_LOGGING_ENABLED
-#define __TACOPIE_LOG(level, msg) tacopie::level(msg, __FILE__, __LINE__);
-#else
-#define __TACOPIE_LOG(level, msg)
-#endif /* __TACOPIE_LOGGING_ENABLED */
-//! convenience macro to log with file and line information
-#ifdef __CPP_REDIS_LOGGING_ENABLED
-#define __CPP_REDIS_LOG(level, msg) cpp_redis::level(msg, __FILE__, __LINE__);
-#else
-#define __CPP_REDIS_LOG(level, msg)
-#endif /* __CPP_REDIS_LOGGING_ENABLED */

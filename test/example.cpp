@@ -32,6 +32,7 @@
 
 int main()
 {
+	
 	set_log_level(logger_iface::log_level::debug);
 	// start IO service
 	IOService::Scheduler &scheduler = IOService::Scheduler::instance();
