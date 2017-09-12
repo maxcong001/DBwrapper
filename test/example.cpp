@@ -32,7 +32,7 @@
 
 int main()
 {
-	
+
 	set_log_level(logger_iface::log_level::debug);
 	// start IO service
 	IOService::Scheduler &scheduler = IOService::Scheduler::instance();
@@ -45,6 +45,8 @@ int main()
 
 	// now for connection manager
 	ConnInfo info;
+	info.destIP = "127.0.0.1";
+	info.destPort = "6379";
 	info.type = 0;
 
 	connManager<RedisConn<ConnInfo>> *tmp_comm = new connManager<RedisConn<ConnInfo>>();
@@ -54,6 +56,8 @@ int main()
 	tmp_comm->add_pool();
 	tmp_comm->add_conn(info);
 	tmp_comm->add_conn(info);
+
+	sleep(1);
 
 	// disconnect 3 connection
 	for (int i = 0; i < 5; i++)
@@ -69,6 +73,28 @@ int main()
 			tmp->onDisconnected(1);
 		}
 	}
+
+	auto tmp = tmp_comm->get_conn();
+	if (tmp == nullptr)
+	{
+		__LOG(error, "no conn in the list!!");
+	}
+	else
+	{
+		std::cout << "got one conection, connection status is " << tmp->get_conn_state() << std::endl;
+		tmp->set("hello", "42", [](cpp_redis::reply &reply) {
+			std::cout << "set hello 42: " << reply << std::endl;
+			// if (reply.is_string())
+			//   do_something_with_string(reply.as_string())
+		});
+		tmp->get("hello", [](cpp_redis::reply &reply) {
+			std::cout << "get hello: " << reply << std::endl;
+			// if (reply.is_string())
+			//   do_something_with_string(reply.as_string())
+		});
+		tmp->sync_commit();
+	}
+	
 #if 0
 	//	tmp_comm->del_conn(info);
 	for (int i = 0; i < 2; i++)
@@ -84,7 +110,7 @@ int main()
 			tmp->onDisconnected(1);
 		}
 	}
-#endif
+
 	//	now there is one connection
 	__LOG(error, "001!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 	{
@@ -143,7 +169,7 @@ int main()
 		std::cout << "got one conection, connection status is " << tmp->get_conn_state() << std::endl;
 		tmp->onDisconnected(1);
 	}
-
+#endif
 	// wait here
 	scheduler_thread.join();
 }
