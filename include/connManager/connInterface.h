@@ -125,6 +125,7 @@ class RedisConn : public std::enable_shared_from_this<RedisConn<connInfo>>
 
                     auto bus = message_bus<connPool<RedisConn<connInfo>>>::instance();
                     bus->call(CONN_INC, this, get_conn_inc_id());
+                    // in the hreatbeat when the connection status is changed do something/.....
 
 
                 }
