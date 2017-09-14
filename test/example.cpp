@@ -30,6 +30,7 @@
 #include <thread>
 #include <unistd.h>
 
+
 int main()
 {
 
@@ -92,9 +93,14 @@ int main()
 			// if (reply.is_string())
 			//   do_something_with_string(reply.as_string())
 		});
+		tmp->ping([](cpp_redis::reply &reply) {
+			std::cout << "get ping reply : " << reply << std::endl;
+			// if (reply.is_string())
+			//   do_something_with_string(reply.as_string())
+		});
 		tmp->sync_commit();
 	}
-	
+
 #if 0
 	//	tmp_comm->del_conn(info);
 	for (int i = 0; i < 2; i++)
@@ -172,4 +178,7 @@ int main()
 #endif
 	// wait here
 	scheduler_thread.join();
+	
+	__LOG(warn, "exit example in 30 secs");
+	sleep(30);
 }

@@ -29,6 +29,7 @@
 #include "connManager/messagebus.h"
 
 #include <cpp_redis/cpp_redis>
+#include <unistd.h>
 
 int main()
 {
@@ -80,4 +81,7 @@ int main()
 
     // synchronous commit, no timeout
     client.sync_commit();
+    sleep(30);
+
+
 }

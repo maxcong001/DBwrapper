@@ -310,6 +310,7 @@ bool connPool<DBConn>::add_conn(connInfo info)
     DBIns->set_conn_dec_id(this->get_conn_dec_id());
     DBIns->set_conn_inc_id(this->get_conn_inc_id());
     return DBIns->connect(info);
+    return true;
 }
 
 template <typename DBConn>

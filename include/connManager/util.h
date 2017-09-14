@@ -70,7 +70,7 @@ struct ConnInfo
     void dump()
     {
         __LOG(debug, "conn info ： \n"
-                         << "type is : \n"
-                         << ((!type) ? "local" : "remote"));
+                         << "type is : "
+                         << ((!type) ? "local" : "remote")<< " dest IP is : "<<destIP<<" dest port is : "<<destPort);
     }
 };
