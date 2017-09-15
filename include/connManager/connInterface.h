@@ -100,8 +100,10 @@ class RedisConn : public std::enable_shared_from_this<RedisConn<connInfo>>
 
     RedisConn(connInfo info)
     {
-
         conn_state = false;
+        hb.set_hb_lost_cb([this](int error){
+            this->onDisconnected(error);
+        });
 
         _info = info;
         __LOG(debug, "new Redis connection! " << (void *)this);
@@ -113,36 +115,8 @@ class RedisConn : public std::enable_shared_from_this<RedisConn<connInfo>>
         // set_conn_state(true);
         // tell pool that there is a new connection
 
-
-        // get connection status
-        this->ping([&](cpp_redis::reply &reply) {
-            __LOG(debug, "now send the PING message!@");
-            if (reply.is_string())
-            {
-                if (reply.as_string() == "PONG")
-                {
-                    conn_state = true;
-
-                    auto bus = message_bus<connPool<RedisConn<connInfo>>>::instance();
-                    bus->call(CONN_INC, this, get_conn_inc_id());
-                    // in the hreatbeat when the connection status is changed do something/.....
-
-
-                }
-                else
-                {
-                    conn_state = false;
-                }
-                __LOG(debug, "ping reply : " << reply << std::endl);
-            }
-            else
-            {
-                __LOG(warn, "reply is not a string");
-            }
-        });
         // start heartbeat
         hb.start([this](std::atomic<bool> &flag) {
-
             this->ping([&](cpp_redis::reply &reply) {
                 __LOG(debug, "now send the PING message!@");
                 if (reply.is_string())
@@ -162,14 +136,7 @@ class RedisConn : public std::enable_shared_from_this<RedisConn<connInfo>>
                     __LOG(warn, "reply is not a string");
                 }
             });
-#if 0
-            this->ping([&](cpp_redis::reply &reply) {
-                __LOG(warn, "in the ping function. ping reply : "<<reply);
-            });
-#endif
-
             this->sync_commit();
-
         },
                  conn_state);
     }
@@ -187,9 +154,38 @@ class RedisConn : public std::enable_shared_from_this<RedisConn<connInfo>>
     {
         __LOG(debug, "connect to info : \n");
         info.dump();
-        auto tmp = std::bind(&RedisConn<connInfo>::onDisconnected, this, 1);
+        auto tmp = std::bind(&RedisConn<connInfo>::onDisconnected, this, 400);
         client.connect(info.destIP, std::stoi(info.destPort), tmp);
-        RedisConn<connInfo>::onConnected();
+
+        // if the ping is fail? To do
+
+        // get connection status
+        this->ping([&](cpp_redis::reply &reply) {
+            __LOG(debug, "now send the PING message!@");
+            if (reply.is_string())
+            {
+                if (reply.as_string() == "PONG")
+                {
+                    conn_state = true;
+
+                    auto bus = message_bus<connPool<RedisConn<connInfo>>>::instance();
+                    bus->call(CONN_INC, this, get_conn_inc_id());
+
+                    RedisConn<connInfo>::onConnected();
+                    // in the hreatbeat when the connection status is changed do something/.....
+                }
+                else
+                {
+                    conn_state = false;
+                }
+                __LOG(debug, "ping reply : " << reply << std::endl);
+            }
+            else
+            {
+                __LOG(warn, "reply is not a string");
+            }
+        });
+        this->sync_commit();
 
         return true;
     }
