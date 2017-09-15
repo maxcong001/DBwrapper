@@ -27,9 +27,9 @@
 #include "connManager/connManager.h"
 #include "connManager/connInterface.h"
 #include "async/scheduler.h"
+#include "connManager/serviceDiscovery.h"
 #include <thread>
 #include <unistd.h>
-
 
 int main()
 {
@@ -43,22 +43,22 @@ int main()
 		scheduler.run();
 		std::cout << "should not run here" << std::endl;
 	});
-
+#if 0
 	// now for connection manager
 	ConnInfo info;
 	info.destIP = "127.0.0.1";
 	info.destPort = "6379";
 	info.type = 0;
-
-	connManager<RedisConn<ConnInfo>> *tmp_comm = new connManager<RedisConn<ConnInfo>>();
+#endif
+	connManager<RedisConn<ConnInfo>, serviceDiscovery<ConnInfo>> *tmp_comm = new connManager<RedisConn<ConnInfo>, serviceDiscovery<ConnInfo>>();
 
 	tmp_comm->add_pool();
 	tmp_comm->add_pool();
 	tmp_comm->add_pool();
-	tmp_comm->add_conn(info);
-	tmp_comm->add_conn(info);
+	//	tmp_comm->add_conn(info);
+	//	tmp_comm->add_conn(info);
 
-	sleep(1);
+	//sleep(1);
 
 	// disconnect 3 connection
 	for (int i = 0; i < 5; i++)
@@ -75,6 +75,7 @@ int main()
 		}
 	}
 
+	sleep(6);
 	auto tmp = tmp_comm->get_conn();
 	if (tmp == nullptr)
 	{
@@ -84,17 +85,17 @@ int main()
 	{
 		std::cout << "got one conection, connection status is " << tmp->get_conn_state() << std::endl;
 		tmp->set("hello", "42", [](cpp_redis::reply &reply) {
-			std::cout << "set hello 42: " << reply << std::endl;
+			__LOG(error, "set hello 42: " << reply);
 			// if (reply.is_string())
 			//   do_something_with_string(reply.as_string())
 		});
 		tmp->get("hello", [](cpp_redis::reply &reply) {
-			std::cout << "get hello: " << reply << std::endl;
+			__LOG(error, "get hello: " << reply);
 			// if (reply.is_string())
 			//   do_something_with_string(reply.as_string())
 		});
 		tmp->ping([](cpp_redis::reply &reply) {
-			std::cout << "get ping reply : " << reply << std::endl;
+			__LOG(error, "get ping reply : " << reply);
 			// if (reply.is_string())
 			//   do_something_with_string(reply.as_string())
 		});
@@ -176,9 +177,10 @@ int main()
 		tmp->onDisconnected(1);
 	}
 #endif
+
 	// wait here
 	scheduler_thread.join();
-	
+
 	__LOG(warn, "exit example in 30 secs");
 	sleep(30);
 }

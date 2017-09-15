@@ -25,6 +25,7 @@
  */
 #pragma once
 #include "connManager/util.h"
+#include "connManager/serviceDiscovery.h"
 
 // connection pool
 template <typename DBConn>
@@ -65,7 +66,7 @@ class connPool
 };
 
 // connmanager
-template <typename DBConn>
+template <typename DBConn, typename serviceDiscovery>
 class connManager
 {
   public:
@@ -95,12 +96,13 @@ class connManager
     std::list<pool_ptr_t> poolList;
     int pool_inc_id;
     int pool_dec_id;
+    serviceDiscovery servDiscov;
 };
 
-template <typename DBConn>
-connManager<DBConn>::connManager()
+template <typename DBConn, typename serviceDiscovery>
+connManager<DBConn, serviceDiscovery>::connManager()
 {
-    auto bus = message_bus<connManager<DBConn>>::instance();
+    auto bus = message_bus<connManager<DBConn, void>>::instance();
     set_pool_inc_id(bus->register_handler(POOL_INC, this, [this](void *objp, void *msgp) {
         // this should not happen, but if happened, just add a new pool as there is new connection
         for (auto i : poolList)
@@ -122,29 +124,46 @@ connManager<DBConn>::connManager()
             this->on_unavaliable();
         }
     }));
+
+    servDiscov.setOnConnInc([this](connInfo info) -> bool {
+        return this->add_conn(info);
+    });
+    servDiscov.setOnConnDec([this](connInfo info) -> bool {
+        return this->del_conn(info);
+
+    });
+    servDiscov.setGetConnInfoCb([this]() -> typename serviceDiscovery::connList {
+        connInfo info;
+        info.destIP = "127.0.0.1";
+        info.destPort = "6379";
+        info.type = 0;
+        typename serviceDiscovery::connList list;
+        list.insert(info);
+        return list;
+    });
 }
 
-template <typename DBConn>
-connManager<DBConn>::~connManager()
+template <typename DBConn, typename serviceDiscovery>
+connManager<DBConn, serviceDiscovery>::~connManager()
 {
-    auto bus = message_bus<connManager<DBConn>>::instance();
+    auto bus = message_bus<connManager<DBConn, void>>::instance();
     bus->remove_handler(POOL_DEC, this);
     bus->remove_handler(POOL_INC, this);
 }
 
-template <typename DBConn>
-void connManager<DBConn>::on_unavaliable()
+template <typename DBConn, typename serviceDiscovery>
+void connManager<DBConn, serviceDiscovery>::on_unavaliable()
 {
     __LOG(warn, "on_unavaliable");
 }
 
-template <typename DBConn>
-void connManager<DBConn>::on_avaliable()
+template <typename DBConn, typename serviceDiscovery>
+void connManager<DBConn, serviceDiscovery>::on_avaliable()
 {
 }
 
-template <typename DBConn>
-int connManager<DBConn>::add_pool()
+template <typename DBConn, typename serviceDiscovery>
+int connManager<DBConn, serviceDiscovery>::add_pool()
 {
     pool_ptr_t pool(new connPool<DBConn>());
     for (auto p_info : infoList)
@@ -161,10 +180,10 @@ int connManager<DBConn>::add_pool()
     return id;
 }
 
-template <typename DBConn>
-bool connManager<DBConn>::del_pool(int id)
+template <typename DBConn, typename serviceDiscovery>
+bool connManager<DBConn, serviceDiscovery>::del_pool(int id)
 {
-    poolList.remove_if([&](const connManager<DBConn>::pool_ptr_t &ptr_t) -> bool {
+    poolList.remove_if([&](const connManager<DBConn, serviceDiscovery>::pool_ptr_t &ptr_t) -> bool {
         if (ptr_t->get_id() == id)
         {
             return true;
@@ -177,8 +196,8 @@ bool connManager<DBConn>::del_pool(int id)
     return true;
 }
 
-template <typename DBConn>
-auto connManager<DBConn>::get_pool() -> typename connManager<DBConn>::pool_ptr_t
+template <typename DBConn, typename serviceDiscovery>
+auto connManager<DBConn, serviceDiscovery>::get_pool() -> typename connManager<DBConn, serviceDiscovery>::pool_ptr_t
 {
     if (poolList.size())
     {
@@ -193,8 +212,8 @@ auto connManager<DBConn>::get_pool() -> typename connManager<DBConn>::pool_ptr_t
     }
 }
 
-template <typename DBConn>
-auto connManager<DBConn>::get_conn() -> typename connPool<DBConn>::DBConn_ptr_t
+template <typename DBConn, typename serviceDiscovery>
+auto connManager<DBConn, serviceDiscovery>::get_conn() -> typename connPool<DBConn>::DBConn_ptr_t
 {
     auto tmp = get_pool();
     if (tmp != nullptr)
@@ -208,8 +227,8 @@ auto connManager<DBConn>::get_conn() -> typename connPool<DBConn>::DBConn_ptr_t
     }
 }
 
-template <typename DBConn>
-bool connManager<DBConn>::add_conn(connInfo info)
+template <typename DBConn, typename serviceDiscovery>
+bool connManager<DBConn, serviceDiscovery>::add_conn(connInfo info)
 {
     infoList.emplace_back(info);
     for (auto tmp : poolList)
@@ -219,8 +238,8 @@ bool connManager<DBConn>::add_conn(connInfo info)
     return true;
 }
 
-template <typename DBConn>
-bool connManager<DBConn>::del_conn(connInfo info)
+template <typename DBConn, typename serviceDiscovery>
+bool connManager<DBConn, serviceDiscovery>::del_conn(connInfo info)
 {
     infoList.remove(info);
     for (auto tmp : poolList)
@@ -248,7 +267,7 @@ connPool<DBConn>::connPool()
             {
                 __LOG(warn, " no connection in the pool : " << ((obj_p->get_id())));
                 // no connection in the pool then send the POOL_DEC message to the connection manager
-                auto bus = message_bus<connManager<DBConn>>::instance();
+                auto bus = message_bus<connManager<DBConn, void>>::instance();
                 bus->call(POOL_DEC, this, this->get_pool_dec_id());
             }
         }
@@ -263,7 +282,7 @@ connPool<DBConn>::connPool()
             if (((obj_p->DBInsLocalList).size() + (obj_p->DBInsRemoteList).size()) == 0)
             {
                 // this should not happen, when the size is 0, this pool should be deleted and related topic is deleted
-                auto bus = message_bus<connManager<DBConn>>::instance();
+                auto bus = message_bus<connManager<DBConn, void>>::instance();
                 bus->call(POOL_INC, this, this->get_pool_inc_id());
             }
             obj_p->add_conn(conn_ptr_p);

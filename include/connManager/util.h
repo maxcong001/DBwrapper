@@ -67,10 +67,21 @@ struct ConnInfo
     {
         return !((this->sourceIP).compare(rhs.sourceIP)) && !((this->sourcePort).compare(rhs.sourcePort)) && !((this->destIP).compare(rhs.destIP)) && !((this->destPort).compare(rhs.destPort)) && this->type == rhs.type;
     }
+
+    std::string toString()
+    {
+        return sourceIP + sourcePort + destIP + destPort + std::to_string(type);
+    }
+
+    bool operator<(const ConnInfo &r) const
+    {
+
+        return std::tie(r.sourceIP, r.sourcePort, r.destIP, r.destPort, r.type) < std::tie(sourceIP, sourcePort, destIP, destPort, type);
+    }
+
     void dump()
     {
         __LOG(debug, "conn info ： \n"
-                         << "type is : "
-                         << ((!type) ? "local" : "remote")<< " dest IP is : "<<destIP<<" dest port is : "<<destPort);
+                         << "type is : " << ((!type) ? "local" : "remote") << " dest IP is : " << destIP << " dest port is : " << destPort);
     }
 };

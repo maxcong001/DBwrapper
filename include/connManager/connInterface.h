@@ -143,16 +143,19 @@ class RedisConn : public std::enable_shared_from_this<RedisConn<connInfo>>
 
     void onDisconnected(int error)
     {
-        __LOG(debug, "enter. connection id is : " << get_conn_inc_id() << " pool index is : " << get_pool_index());
+        __LOG(warn, "onDisconnected. connection id is : " << get_conn_inc_id() << " pool index is : " << get_pool_index());
         set_conn_state(false);
         // tell pool that a connection is deleted
         auto bus = message_bus<connPool<RedisConn<connInfo>>>::instance();
         bus->call(CONN_DEC, this, get_conn_dec_id());
+        client.disconnect(true);
+        // just call connect, do somethin later
+        connect(_info);
     }
 
     bool connect(connInfo info)
     {
-        __LOG(debug, "connect to info : \n");
+        __LOG(debug, "connect to info : ");
         info.dump();
         auto tmp = std::bind(&RedisConn<connInfo>::onDisconnected, this, 400);
         client.connect(info.destIP, std::stoi(info.destPort), tmp);
@@ -161,7 +164,7 @@ class RedisConn : public std::enable_shared_from_this<RedisConn<connInfo>>
 
         // get connection status
         this->ping([&](cpp_redis::reply &reply) {
-            __LOG(debug, "now send the PING message!@");
+            __LOG(debug, "now send the first PING message!@@@@@@@@@@@@");
             if (reply.is_string())
             {
                 if (reply.as_string() == "PONG")
