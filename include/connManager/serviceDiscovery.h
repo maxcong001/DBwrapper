@@ -43,6 +43,7 @@ class serviceDiscovery
         __LOG(debug, "[serviceDiscovery] serviceDiscovery");
         timer = translib::TimerManager::instance()->getTimer();
         interval = 5000;
+        //this->getConnInfo();
         timer->startForever(interval, [this]() {
             this->getConnInfo();
         });

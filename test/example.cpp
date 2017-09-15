@@ -28,6 +28,8 @@
 #include "connManager/connInterface.h"
 #include "async/scheduler.h"
 #include "connManager/serviceDiscovery.h"
+#include "translib/timerManager.h"
+#include "translib/timer.h"
 #include <thread>
 #include <unistd.h>
 
@@ -43,23 +45,44 @@ int main()
 		scheduler.run();
 		std::cout << "should not run here" << std::endl;
 	});
-#if 0
+
 	// now for connection manager
 	ConnInfo info;
 	info.destIP = "127.0.0.1";
 	info.destPort = "6379";
 	info.type = 0;
-#endif
 	connManager<RedisConn<ConnInfo>, serviceDiscovery<ConnInfo>> *tmp_comm = new connManager<RedisConn<ConnInfo>, serviceDiscovery<ConnInfo>>();
 
 	tmp_comm->add_pool();
 	tmp_comm->add_pool();
 	tmp_comm->add_pool();
-	//	tmp_comm->add_conn(info);
-	//	tmp_comm->add_conn(info);
+	tmp_comm->add_conn(info);
+	//tmp_comm->add_conn(info);
 
-	//sleep(1);
-
+	auto timer = translib::TimerManager::instance()->getTimer();
+	timer->startForever(1000, [&]() {
+		auto tmp = tmp_comm->get_conn();
+		if (tmp == nullptr)
+		{
+			__LOG(error, "no conn in the list!!");
+		}
+		else
+		{
+			__LOG(warn, "got one conection, connection status is " << tmp->get_conn_state());
+			tmp->set("hello", "42", [](cpp_redis::reply &reply) {
+				__LOG(debug, "set hello 42: " << reply);
+			});
+			tmp->get("hello", [](cpp_redis::reply &reply) {
+				__LOG(debug, "get hello: " << reply);
+			});
+			tmp->ping([](cpp_redis::reply &reply) {
+				__LOG(debug, "get ping reply : " << reply.as_string());
+			});
+			tmp->sync_commit();
+		}
+	});
+//sleep(1);
+#if 0
 	// disconnect 3 connection
 	for (int i = 0; i < 5; i++)
 	{
@@ -101,7 +124,7 @@ int main()
 		});
 		tmp->sync_commit();
 	}
-
+#endif
 #if 0
 	//	tmp_comm->del_conn(info);
 	for (int i = 0; i < 2; i++)
