@@ -43,44 +43,6 @@ int main()
                     << "this is info log");
     __LOG(debug, "hello logger!"
                      << "this is debug log");
-
-    cpp_redis::redis_client client;
-
-    client.connect("127.0.0.1", 6379, [](cpp_redis::redis_client &) {
-        std::cout << "client disconnected (disconnection handler)" << std::endl;
-    });
-
-    // same as client.send({ "SET", "hello", "42" }, ...)
-    client.set("hello", "42", [](cpp_redis::reply &reply) {
-        std::cout << "set hello 42: " << reply << std::endl;
-        // if (reply.is_string())
-        //   do_something_with_string(reply.as_string())
-    });
-
-    // same as client.send({ "DECRBY", "hello", 12 }, ...)
-    client.decrby("hello", 12, [](cpp_redis::reply &reply) {
-        std::cout << "decrby hello 12: " << reply << std::endl;
-        // if (reply.is_integer())
-        //   do_something_with_integer(reply.as_integer())
-    });
-
-    // same as client.send({ "GET", "hello" }, ...)
-    client.get("hello", [](cpp_redis::reply &reply) {
-        std::cout << "get hello: " << reply << std::endl;
-        // if (reply.is_string())
-        //   do_something_with_string(reply.as_string())
-    });
-
-    client.zadd("zhello", {}, {{"1", "a"}, {"2", "b"}, {"3", "c"}, {"4", "d"}},
-                [](cpp_redis::reply &reply) {
-                    std::cout << "zadd zhello 1 a 2 b 3 c 4 d: " << reply << std::endl;
-                });
-
-    // commands are pipelined and only sent when client.commit() is called
-    // client.commit();
-
-    // synchronous commit, no timeout
-    client.sync_commit();
     sleep(30);
 
 }
