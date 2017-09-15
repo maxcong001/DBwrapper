@@ -35,30 +35,30 @@
 
 int main()
 {
-
+	// setup log related
 	set_log_level(logger_iface::log_level::debug);
-	// start IO service
+	// start IO service(this is optional)
 	IOService::Scheduler &scheduler = IOService::Scheduler::instance();
-
 	std::thread scheduler_thread([&scheduler] {
 		std::cout << "start a new thread to run boost io_service!" << std::endl;
 		scheduler.run();
 		std::cout << "should not run here" << std::endl;
 	});
-
-	// now for connection manager
+	// for connection manager(this is optional)
 	ConnInfo info;
 	info.destIP = "127.0.0.1";
 	info.destPort = "6379";
 	info.type = 0;
+	// new instance
 	connManager<RedisConn<ConnInfo>, serviceDiscovery<ConnInfo>> *tmp_comm = new connManager<RedisConn<ConnInfo>, serviceDiscovery<ConnInfo>>();
 
 	tmp_comm->add_pool();
 	tmp_comm->add_pool();
 	tmp_comm->add_pool();
+	// add connection info right now, before service discovery function(this is optional)
 	tmp_comm->add_conn(info);
-	//tmp_comm->add_conn(info);
 
+	// test begin
 	auto timer = translib::TimerManager::instance()->getTimer();
 	timer->startForever(1000, [&]() {
 		auto tmp = tmp_comm->get_conn();
@@ -81,129 +81,7 @@ int main()
 			tmp->sync_commit();
 		}
 	});
-//sleep(1);
-#if 0
-	// disconnect 3 connection
-	for (int i = 0; i < 5; i++)
-	{
-		auto tmp = tmp_comm->get_conn();
-		if (tmp == nullptr)
-		{
-			__LOG(error, "no conn in the list!!");
-		}
-		else
-		{
-			__LOG(warn, "got one conection, connection status is " << tmp->get_conn_state());
-			tmp->onDisconnected(1);
-		}
-	}
-
-	sleep(6);
-	auto tmp = tmp_comm->get_conn();
-	if (tmp == nullptr)
-	{
-		__LOG(error, "no conn in the list!!");
-	}
-	else
-	{
-		std::cout << "got one conection, connection status is " << tmp->get_conn_state() << std::endl;
-		tmp->set("hello", "42", [](cpp_redis::reply &reply) {
-			__LOG(error, "set hello 42: " << reply);
-			// if (reply.is_string())
-			//   do_something_with_string(reply.as_string())
-		});
-		tmp->get("hello", [](cpp_redis::reply &reply) {
-			__LOG(error, "get hello: " << reply);
-			// if (reply.is_string())
-			//   do_something_with_string(reply.as_string())
-		});
-		tmp->ping([](cpp_redis::reply &reply) {
-			__LOG(error, "get ping reply : " << reply);
-			// if (reply.is_string())
-			//   do_something_with_string(reply.as_string())
-		});
-		tmp->sync_commit();
-	}
-#endif
-#if 0
-	//	tmp_comm->del_conn(info);
-	for (int i = 0; i < 2; i++)
-	{
-		auto tmp = tmp_comm->get_conn();
-		if (tmp == nullptr)
-		{
-			__LOG(error, "no conn in the list!!");
-		}
-		else
-		{
-			std::cout << "got one conection, connection status is " << tmp->get_conn_state() << std::endl;
-			tmp->onDisconnected(1);
-		}
-	}
-
-	//	now there is one connection
-	__LOG(error, "001!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-	{
-		auto tmp = tmp_comm->get_conn();
-		if (tmp == nullptr)
-		{
-			__LOG(error, "no conn in the list!!");
-		}
-		else
-		{
-			std::cout << "got one conection, connection status is " << tmp->get_conn_state() << std::endl;
-			//tmp->onDisconnected(1);
-		}
-	}
-
-	__LOG(error, "002!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-	{
-		auto tmp = tmp_comm->get_conn();
-		if (tmp == nullptr)
-		{
-			__LOG(error, "no conn in the list!!");
-		}
-		else
-		{
-			std::cout << "got one conection, connection status is " << tmp->get_conn_state() << std::endl;
-			tmp->onDisconnected(1);
-		}
-	}
-
-	
-	__LOG(error, "003!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
-	for (int i = 0; i < 3; i++)
-	{
-		auto tmp = tmp_comm->get_conn();
-		if (tmp == nullptr)
-		{
-			__LOG(error, "no conn in the list!!");
-		}
-		else
-		{
-			std::cout << "got one conection, connection status is " << tmp->get_conn_state() << std::endl;
-			tmp->onDisconnected(1);
-		}
-	}
-
-	__LOG(warn, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
-	auto tmp = tmp_comm->get_conn();
-	if (tmp == nullptr)
-	{
-		__LOG(error, "no conn in the list!!");
-	}
-	else
-	{
-		std::cout << "got one conection, connection status is " << tmp->get_conn_state() << std::endl;
-		tmp->onDisconnected(1);
-	}
-#endif
-
 	// wait here
 	scheduler_thread.join();
-
 	__LOG(warn, "exit example in 30 secs");
-	sleep(30);
 }
