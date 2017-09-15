@@ -19,9 +19,11 @@ class Timer;
  * @brief event loop with frame ttimer
  * @details as there is infinite timer, so it exist in the registerd event forever. default frame timer is 10ms
  */
-class FrameLoop : public translib::Loop {
+class FrameLoop : public translib::Loop
+{
 	typedef Loop Super;
-public:
+
+  public:
 	FrameLoop();
 	virtual ~FrameLoop();
 
@@ -37,21 +39,18 @@ public:
 	/** get current round */
 	uint64_t curFrameRound() const;
 
-protected:
-
+  protected:
 	virtual void onBeforeLoop();
 
 	virtual void onFrame();
 
-private:
+  private:
 	//timer of frame
-	Timer * _frameTimer;
+	Timer *_frameTimer;
 	//frame interval in ms
 	uint32_t _frameInterval;
 };
 
 } /* namespace translib */
-
-
 
 #endif /* INCLUDE_EC_FRAMELOOP_H_ */

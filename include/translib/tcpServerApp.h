@@ -3,15 +3,18 @@
 #include "ringbuffer/ringbuffer.hpp"
 #include "logger/logger.h"
 
-namespace translib {
-class TcpServerAPP : public translib::TcpServer {
+namespace translib
+{
+class TcpServerAPP : public translib::TcpServer
+{
 public:
-
   virtual void onListenError() { __LOG(debug, ""); }
 
-  virtual void onSessionRead(translib::TcpSession *session) {
+  virtual void onSessionRead(translib::TcpSession *session)
+  {
     char *buff = _ring_buffer.peek_head_p();
-    if (!buff) {
+    if (!buff)
+    {
       __LOG(error, "get invalid buffer ptr " << (void *)buff);
       return;
     }
@@ -20,21 +23,23 @@ public:
 
     __LOG(debug, "receive message with length : " << length);
 
-    while (!_ring_buffer.add(length, buff)) {
+    while (!_ring_buffer.add(length, buff))
+    {
       std::this_thread::yield();
       //std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
     __LOG(debug, "now ring buffer size " << _ring_buffer.size());
 
-    __LOG(debug, "sesson id is : " << session->id()
-                                   << " data:" << (void *)buff);
+    __LOG(debug, "sesson id is : " << session->id() << " data:" << (void *)buff);
   }
 
-  virtual void onSessionDisconnected(translib::TcpSession *session) {
+  virtual void onSessionDisconnected(translib::TcpSession *session)
+  {
     __LOG(debug, " ");
   }
 
-  virtual void onNewSession(translib::TcpSession *session) {
+  virtual void onNewSession(translib::TcpSession *session)
+  {
     __LOG(debug, " ");
   }
 

@@ -12,12 +12,11 @@
 namespace translib
 {
 
-const char * CONNECTION_KEY = "Connection";
-const char * CONNECTION_VALUE = "keep-alive";
+const char *CONNECTION_KEY = "Connection";
+const char *CONNECTION_VALUE = "keep-alive";
 
-HttpServer::HttpServer() :
-		_port(0),
-		_http(NULL)
+HttpServer::HttpServer() : _port(0),
+						   _http(NULL)
 {
 }
 
@@ -55,8 +54,7 @@ bool HttpServer::listen(const char *ip, uint16_t port)
 	return true;
 }
 
-
-void HttpServer::regHandler(const char * path, translib::HttpHandler handler)
+void HttpServer::regHandler(const char *path, translib::HttpHandler handler)
 {
 	if (NULL == _http)
 	{
@@ -79,7 +77,7 @@ void HttpServer::mainCallback(struct evhttp_request *req, void *arg)
 	translib::HttpRequest *request = new HttpRequest(req);
 	(*handler)(request);
 
-	const char * value = request->findHeaders(CONNECTION_KEY);
+	const char *value = request->findHeaders(CONNECTION_KEY);
 	if (value != NULL && strncmp(CONNECTION_VALUE, value, strlen(CONNECTION_VALUE)) == 0)
 	{
 		evhttp_add_header(req->output_headers, CONNECTION_KEY, CONNECTION_VALUE);
@@ -93,5 +91,3 @@ void HttpServer::mainCallback(struct evhttp_request *req, void *arg)
 }
 
 } /* namespace translib */
-
-

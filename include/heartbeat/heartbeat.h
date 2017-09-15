@@ -8,19 +8,19 @@
 class heartbeat
 {
   public:
+    typedef std::function<void(std::atomic<bool> &)> ping_f;
+    typedef std::function<void(void)> hb_success_cb;
+    typedef std::function<void(int)> hb_lost_cb;
     heartbeat()
     {
         timer = translib::TimerManager::instance()->getTimer();
         interval = 5000;
     }
     ~heartbeat()
-    {__LOG(debug, "[heartbeat] ~heartbeat");
+    {
+        __LOG(debug, "[heartbeat] ~heartbeat");
         timer->stop();
     }
-    typedef std::function<void(std::atomic<bool> &)> ping_f;
-    typedef std::function<void(void)> hb_success_cb;
-    typedef std::function<void(int)> hb_lost_cb;
-
     void onHeartbeatLost()
     {
         __LOG(debug, "onHeartbeatLost");
@@ -39,9 +39,7 @@ class heartbeat
     }
     void start(ping_f fun, std::atomic<bool> &success)
     {
-
         timer->startForever(interval, [fun, &success, this]() {
-
             if (success)
             {
                 onHeartbeatSuccess();
@@ -53,7 +51,6 @@ class heartbeat
             success = false;
             __LOG(debug, "call ping function : " << typeid(fun).name());
             fun(success);
-
         });
     }
 

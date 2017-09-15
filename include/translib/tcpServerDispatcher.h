@@ -32,10 +32,11 @@ class TcpServerDispatcher : public translib::FrameLoop
 		translib::SessionId id;
 		translib::SocketFd sock;
 	};
-public:
+
+  public:
 	TcpServerDispatcher(TcpServer *server);
 
-	inline translib::TcpServer * server() const
+	inline translib::TcpServer *server() const
 	{
 		return _server;
 	}
@@ -46,19 +47,17 @@ public:
 
 	void removeSession(translib::SessionId id);
 
-protected:
+  protected:
 	/** @override */
 	virtual void onFrame();
 
-private:
-	TcpServer * _server;
+  private:
+	TcpServer *_server;
 	std::map<translib::SessionId, translib::TcpSessionPtr> _sessions;
 	std::queue<SessionAction> _actions;
 	Mutex _mutex;
 };
 
 } /* namespace translib */
-
-
 
 #endif /* INCLUDE_EC_TCPSERVERDISPATCHER_H_ */

@@ -11,13 +11,12 @@
 namespace translib
 {
 
-Timer::Timer(const translib::Loop &loop) :
-		_loop(loop),
-		_event(NULL),
-		_interval(0),
-		_round(1),
-		_curRound(0),
-		_handler(NULL)
+Timer::Timer(const translib::Loop &loop) : _loop(loop),
+										   _event(NULL),
+										   _interval(0),
+										   _round(1),
+										   _curRound(0),
+										   _handler(NULL)
 {
 }
 
@@ -27,9 +26,9 @@ Timer::~Timer()
 }
 
 bool Timer::startRounds(
-		uint32_t interval,
-		uint64_t round,
-		translib::Timer::Handler handler)
+	uint32_t interval,
+	uint64_t round,
+	translib::Timer::Handler handler)
 {
 	if (NULL != _event)
 	{
@@ -44,8 +43,8 @@ bool Timer::startRounds(
 
 	struct timeval tv = {};
 	evutil_timerclear(&tv);
-	tv.tv_sec = interval/1000;
-	tv.tv_usec = interval%1000*1000;
+	tv.tv_sec = interval / 1000;
+	tv.tv_usec = interval % 1000 * 1000;
 
 	if (0 != event_add(_event, &tv))
 	{
@@ -72,10 +71,10 @@ bool Timer::startForever(uint32_t interval, translib::Timer::Handler handler)
 }
 
 bool Timer::startAfter(
-		uint32_t after,
-		uint32_t interval,
-		uint64_t round,
-		translib::Timer::Handler handler)
+	uint32_t after,
+	uint32_t interval,
+	uint64_t round,
+	translib::Timer::Handler handler)
 {
 	return startOnce(after, [=]() {
 		startRounds(interval, round, handler);

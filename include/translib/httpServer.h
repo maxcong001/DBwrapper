@@ -16,23 +16,23 @@
 namespace translib
 {
 
-typedef std::function<void (translib::HttpRequest *request)> HttpHandler;
+typedef std::function<void(translib::HttpRequest *request)> HttpHandler;
 
 class HttpServer : public translib::Loop
 {
-public:
+  public:
 	HttpServer();
 	virtual ~HttpServer();
 
 	bool listen(const char *ip, uint16_t port);
 
-	void regHandler(const char * path, translib::HttpHandler handler);
+	void regHandler(const char *path, translib::HttpHandler handler);
 
-private:
+  private:
 	static void genericCallback(struct evhttp_request *req, void *arg);
 	static void mainCallback(struct evhttp_request *req, void *arg);
 
-private:
+  private:
 	std::string _ip;
 	uint16_t _port;
 

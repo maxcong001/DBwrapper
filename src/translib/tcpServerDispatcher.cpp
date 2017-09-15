@@ -11,9 +11,9 @@
 namespace translib
 {
 
-TcpServerDispatcher::TcpServerDispatcher(TcpServer *server) :
-		_server(server)
-{}
+TcpServerDispatcher::TcpServerDispatcher(TcpServer *server) : _server(server)
+{
+}
 
 translib::TcpSessionPtr TcpServerDispatcher::getSession(translib::SessionId id)
 {
@@ -44,7 +44,7 @@ void TcpServerDispatcher::onFrame()
 	MutexLock lock(_mutex);
 	while (!_actions.empty())
 	{
-		SessionAction & action = _actions.front();
+		SessionAction &action = _actions.front();
 
 		if (action.sock != SOCKET_FD_INVALID) //add session
 		{
@@ -62,6 +62,5 @@ void TcpServerDispatcher::onFrame()
 		_actions.pop();
 	}
 }
-
 
 } /* namespace translib */

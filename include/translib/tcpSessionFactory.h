@@ -14,9 +14,9 @@ namespace translib
 {
 class TcpSessionFactory
 {
-public:
-	TcpSessionFactory() {};
-	virtual ~TcpSessionFactory() {};
+  public:
+	TcpSessionFactory(){};
+	virtual ~TcpSessionFactory(){};
 
 	virtual TcpSessionPtr create()
 	{
@@ -25,7 +25,5 @@ public:
 };
 
 } /* namespace translib */
-
-
 
 #endif /* INCLUDE_EC_TCPSESSIONFACTORY_H_ */

@@ -20,11 +20,11 @@ class TcpServerDispatcher;
  */
 class TcpSession : public translib::TcpSocket, public std::enable_shared_from_this<TcpSession>
 {
-public:
+  public:
 	TcpSession();
 
 	/** get TCP server dispatcher */
-	inline translib::TcpServerDispatcher * dispatcher() const
+	inline translib::TcpServerDispatcher *dispatcher() const
 	{
 		return _dispatcher;
 	}
@@ -40,11 +40,11 @@ public:
 	 * @return 
 	 */
 	bool attach(
-			translib::TcpServerDispatcher * dispatcher,
-			translib::SessionId id,
-			translib::SocketFd sock);
+		translib::TcpServerDispatcher *dispatcher,
+		translib::SessionId id,
+		translib::SocketFd sock);
 
-protected:
+  protected:
 	/**
 	 * @brief 
 	 * @details cal TcpServer::onSessionRead by default. 
@@ -52,14 +52,14 @@ protected:
 	 */
 	virtual void onRead();
 
-private:
+  private:
 	void handleEvent(short events);
 
 	static void readCallback(struct bufferevent *bev, void *data);
 	static void writeCallback(struct bufferevent *bev, void *data);
 	static void eventCallback(struct bufferevent *bev, short events, void *data);
 
-private:
+  private:
 	translib::TcpServerDispatcher *_dispatcher;
 	translib::SessionId _id;
 };
@@ -67,6 +67,5 @@ private:
 typedef std::shared_ptr<TcpSession> TcpSessionPtr;
 
 } /* namespace translib */
-
 
 #endif /* INCLUDE_EC_TCPSESSION_H_ */

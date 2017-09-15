@@ -36,9 +36,9 @@ class TimerManager
 		}
 		audit_timer = NULL;
 	}
-	static TimerManager* instance()
+	static TimerManager *instance()
 	{
-		static TimerManager* ins = new TimerManager();
+		static TimerManager *ins = new TimerManager();
 		return ins;
 	}
 

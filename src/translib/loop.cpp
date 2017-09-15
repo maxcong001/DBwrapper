@@ -7,7 +7,7 @@
 
 #include "translib/loop.h"
 
-thread_local translib::Loop * curThreadLoop;
+thread_local translib::Loop *curThreadLoop;
 
 namespace translib
 {
@@ -15,11 +15,10 @@ std::mutex Loop::_sMutex;
 std::map<uint32_t, translib::Loop *> Loop::_sLoops;
 uint32_t Loop::_sIdGenerater = 0;
 
-Loop::Loop() :
-	_id(0),
-	_base(NULL),
-	_thread(NULL),
-	_status(StatusInit)
+Loop::Loop() : _id(0),
+			   _base(NULL),
+			   _thread(NULL),
+			   _status(StatusInit)
 {
 	_sMutex.lock();
 	_sIdGenerater++;
@@ -33,7 +32,7 @@ Loop::Loop() :
 		evthread_use_windows_threads();
 #else
 		evthread_use_pthreads();
-#endif//PLATFORM_WINDOWS
+#endif //PLATFORM_WINDOWS
 	}
 
 	_sLoops[_id] = this;
@@ -62,18 +61,20 @@ Loop::~Loop()
 	{
 #ifdef PLATFORM_WINDOWS
 		WSACleanup();
-#endif//PLATFORM_WINDOWS
+#endif //PLATFORM_WINDOWS
 	}
 	_sMutex.unlock();
 }
 
 bool Loop::start(bool newThread)
 {
-	if (_status != StatusInit) {
+	if (_status != StatusInit)
+	{
 		return false;
 	}
 
-	if (!onBeforeStart()) {
+	if (!onBeforeStart())
+	{
 		return false;
 	}
 
@@ -99,7 +100,8 @@ void Loop::wait()
 
 void Loop::stop(bool waiting)
 {
-	if (StatusFinished == _status) {
+	if (StatusFinished == _status)
+	{
 		return;
 	}
 
@@ -135,12 +137,12 @@ void Loop::onAfterStop()
 {
 }
 
-Loop * Loop::curLoop()
+Loop *Loop::curLoop()
 {
 	return curThreadLoop;
 }
 
-Loop * Loop::get(uint32_t id)
+Loop *Loop::get(uint32_t id)
 {
 	std::unique_lock<std::mutex> lock(_sMutex);
 	auto iter = _sLoops.find(id);
