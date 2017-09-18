@@ -46,7 +46,7 @@ See [test](test) for more guidance on how to run various test suites (e.g. unit 
 
 # Usage
 
-MMQ is pretty easy to use, just see the [example](example) 
+just see the [example](example) 
 
 
 
