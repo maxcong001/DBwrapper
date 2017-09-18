@@ -51,14 +51,13 @@ int main()
 	info.type = 0;
 	// new instance
 	connManager<RedisConn<ConnInfo>, serviceDiscovery<ConnInfo>> *tmp_comm = new connManager<RedisConn<ConnInfo>, serviceDiscovery<ConnInfo>>();
-
 	tmp_comm->add_pool();
 	tmp_comm->add_pool();
 	tmp_comm->add_pool();
 	// add connection info right now, before service discovery function(this is optional)
 	tmp_comm->add_conn(info);
-
-	// test begin
+	//#######################################################################################
+	// test begin here 
 	auto timer = translib::TimerManager::instance()->getTimer();
 	timer->startForever(1000, [&]() {
 		auto tmp = tmp_comm->get_conn();
