@@ -58,7 +58,7 @@ int main()
 	// add connection info right now, before service discovery function(this is optional)
 	tmp_comm->add_conn(info);
 	//#######################################################################################
-	// test begin here 
+	// test begin here
 	auto timer = translib::TimerManager::instance()->getTimer();
 	timer->startForever(1000, [&]() {
 		auto tmp = tmp_comm->get_conn();
