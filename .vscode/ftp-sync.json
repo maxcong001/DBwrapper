@@ -1,7 +1,7 @@
 {
-    "remotePath": "/home/pi/DB",
-    "host": "135.252.33.113",
-    "username": "pi",
+    "remotePath": "/home/max/study/github/DBwrapper",
+    "host": "135.252.33.100",
+    "username": "max",
     "password": "savage221",
     "port": 22,
     "secure": false,
