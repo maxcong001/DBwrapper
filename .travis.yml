@@ -28,7 +28,7 @@ addons:
 
 
 before_install:
-git clone https://github.com/Cylix/tacopie.git&&cd tacopie&&mkdir build&&cd build&& cmake ..&& make install
+git clone https://github.com/Cylix/tacopie.git&&cd tacopie&&mkdir build&&cd build&& cmake ..&&make&&make install
 
 install:
   - if [[ "$TRAVIS_OS_NAME" != "osx" && "$CXX" = "g++" ]]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
