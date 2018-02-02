@@ -30,6 +30,6 @@ before_install:
 
 install:
   - if [[ "$TRAVIS_OS_NAME" != "osx" && "$CXX" = "g++" ]]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
-
+before_script:./build.sh
 script: 
 mkdir build && cd build && cmake .. && make && ./bin/translib_tests
