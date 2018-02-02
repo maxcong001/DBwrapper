@@ -6,5 +6,5 @@ cd $work_path
 git clone https://github.com/Cylix/tacopie.git&&cd tacopie&&mkdir -p build&&cd build&&cmake ..&&make&&sudo make install
 cd $work_path
 git clone --recursive https://github.com/Cylix/cpp_redis.git&&cd cpp_redis&&mkdir -p build&&cd build&&cmake ..&&make&&sudo make install
+cd $work_path
 
-cd $work_path&&mkdir -p build&&cd build&&cmake ..&&make&&sudo make install
