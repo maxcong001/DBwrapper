@@ -29,13 +29,13 @@ addons:
       - libboost-all-dev
 
 before_install:
-  - ./build.sh
+  - chmod 755 build.sh&&./build.sh
 
 install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install ccache; fi
 
 
-script: mkdir build && cd build && cmake .. -DBUILD_TESTS=true -DBUILD_EXAMPLES=true && make && GTEST_COLOR=1 ctest -VV
+script: mkdir build && ls
 
 
 
