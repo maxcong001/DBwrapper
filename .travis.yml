@@ -35,7 +35,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install ccache; fi
 
 
-script: ls /usr/local/include&&ls /usr/include&&mkdir build && cmake ..&&make&&ls bin/ 
+script: ls /usr/local/include&&echo 'aaaaaaaaaaaaa'&&ls /usr/include&&mkdir build &&cd build&& cmake ..&&make&&ls bin/ 
 
 
 
