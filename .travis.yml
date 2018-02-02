@@ -13,8 +13,7 @@ cache: ccache
 
 os:
   - linux
-services:
-- redis-server
+services:redis-server
 
 addons:
   apt:
