@@ -60,7 +60,7 @@ int main()
     //#######################################################################################
     // test begin here
     auto timer = translib::TimerManager::instance()->getTimer();
-    timer->startForever(1000, [&]() {
+    timer->startRounds(1000, 3, [&]() {
         auto tmp = tmp_comm->get_conn();
         if (tmp == nullptr)
         {
