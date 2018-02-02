@@ -32,4 +32,6 @@ before_install:
 install:
   - if [[ "$TRAVIS_OS_NAME" != "osx" && "$CXX" = "g++" ]]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 
-script: mkdir build && cd build && cmake .. && make && ./bin/translib_tests
+script: 
+
+git clone https://github.com/Cylix/cpp_redis.git&& cd cpp_redis&&mkdir build&&cd build&&cmake ..&&make&&make install&&cd ../..&&ls&&mkdir build && cd build && cmake .. && make && ./bin/translib_tests
