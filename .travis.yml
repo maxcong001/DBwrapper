@@ -13,7 +13,10 @@ cache: ccache
 
 os:
   - linux
-#services:redis-server
+
+
+services:
+  - redis-server
 
 addons:
   apt:
@@ -25,11 +28,15 @@ addons:
       - g++-4.8
       - libboost-all-dev
 
-#before_install:
+before_install:
+  - ./build.sh
 
 install:
-  - if [[ "$TRAVIS_OS_NAME" != "osx" && "$CXX" = "g++" ]]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
-#before_script:
-#./build.sh
-script: 
-./build.sh && ./bin/translib_tests
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install ccache; fi
+
+
+script: mkdir build && cd build && cmake .. -DBUILD_TESTS=true -DBUILD_EXAMPLES=true && make && GTEST_COLOR=1 ctest -VV
+
+
+
+
