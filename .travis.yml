@@ -35,7 +35,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install ccache; fi
 
 
-script: chmod 755 build.sh&&./build.sh&&mkdir build &&cd build&& cmake ..&&make
+script: chmod 755 build.sh&&./build.sh&&mkdir build &&cd build&& cmake ..&&make&&ls /usr/local/include
 
 
 
