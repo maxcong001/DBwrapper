@@ -38,5 +38,3 @@ install:
 script: chmod 755 build.sh&&./build.sh&&mkdir build &&cd build&& cmake ..&&make&&ls /usr/local/include
 
 
-
-
