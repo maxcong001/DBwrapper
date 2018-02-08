@@ -1,7 +1,7 @@
 #pragma once
 #include "tcpServer.h"
 #include "ringbuffer/ringbuffer.hpp"
-#include "logger/logger.h"
+#include "logger/logger.hpp"
 
 namespace translib
 {

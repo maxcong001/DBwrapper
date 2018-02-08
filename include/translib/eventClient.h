@@ -1,6 +1,6 @@
+#pragma once
 /*
  * Copyright (c) 2016-20017 Max Cong <savagecm@qq.com>
- * this code can be found at https://github.com/maxcong001/connection_manager
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -23,47 +23,43 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#pragma once
-
-#include <memory>
-#include <chrono>
-#include <async/io_context.h>
-
-namespace IOService
+#include "logger/logger.hpp"
+#include "translib/define.h"
+#include <unistd.h>
+#include <sys/eventfd.h>
+namespace translib
 {
 
-class Scheduler : public io_context
+/**
+ * @brief EventFdClient base 
+ */
+class EventFdClient
 {
-  public:
-    ~Scheduler() = default;
+public:
+  EventFdClient() = delete;
+  // Note:!! please make sure your fd is non-blocking
+  // for example: int ev_fd = eventfd(0, EFD_NONBLOCK|EFD_CLOEXEC);
+  EventFdClient(int efd) : one(1)
+  {
+    eventFd = efd;
+    __LOG(debug, "event fd is " << eventFd);
+  }
+  virtual ~EventFdClient() {}
 
-    static Scheduler &instance();
-    void destroy();
+  bool send()
+  {
+    int ret = write(eventFd, &one, sizeof(one));
+    if (ret != sizeof(one))
+    {
+      __LOG(error, "write event fd : " << eventFd << " fail");
+      return false;
+    }
+    return true;
+  }
 
-  protected:
-    Scheduler();
-
-  private:
-    static std::unique_ptr<Scheduler> _instance;
+private:
+  int eventFd;
+  uint64_t one;
 };
 
-inline void invoke_now(std::function<void()> func)
-{
-    Scheduler::instance().get_executor().post(func);
-}
-
-inline void invoke_later(std::function<void()> func, std::chrono::milliseconds const &ms)
-{
-    Scheduler::instance().get_executor().invoke_later(func, ms);
-}
-
-inline void invoke_later(std::function<void()> func, uint32_t ms)
-{
-    invoke_later(func, std::chrono::milliseconds(ms));
-}
-
-inline void invoke_at(std::function<void()> func, std::time_t const &date)
-{
-    Scheduler::instance().get_executor().invoke_at(func, date);
-}
-}
+} /* namespace translib */

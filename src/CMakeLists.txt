@@ -12,6 +12,8 @@ MESSAGE(STATUS "PROJECT_SOURCE_DIR:" ${PROJECT_SOURCE_DIR})
 
 # Where header files can be found.
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
+#for hiredis
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include/adapter/redis/hiredis)
 
 # Include sub directory adapters and utils.
 #ADD_SUBDIRECTORY(utils)
