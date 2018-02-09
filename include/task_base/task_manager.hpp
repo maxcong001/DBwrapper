@@ -22,8 +22,13 @@ class manager_task : public task_base
     void set_hb_interval(std::uint32_t interval) override
     {
         _hb_itval = interval;
-        _timer_mgr.killTimer(_hb_tid);
-        start_hb();
+        // if hb tid is 0, that means this is the first time to set hb interval
+        // do not kill timer and start_hb
+        if (_hb_tid)
+        {
+            _timer_mgr.killTimer(_hb_tid);
+            start_hb();
+        }
     }
     bool on_before_loop() override;
 
@@ -110,12 +115,19 @@ class task_manager
     // send HB message with body equals to remote task name
     bool send_hb_all()
     {
+        __LOG(debug, "[send_hb_all] : there are " << task_map.size() << " tasks:");
+        /*
+        for (auto it : task_map)
+        {
+            __LOG(debug, "  " << it.first);
+        }
+        */
         for (auto it : task_map)
         {
             if (it.first.compare(TASK0))
             {
                 // not task0
-                send2task(it.first, MSG_TYPE::TASK_HB, it.first, _seq_id);
+                send2task(it.first, MSG_TYPE::TASK_HB_REQ, it.first, _seq_id);
                 _seq_id++;
             }
             else
@@ -152,8 +164,8 @@ class task_manager
     // note  if _poll is set to true, it will hang here and wait for incoming message
     bool init(bool _poll = true)
     {
+        __LOG(debug, "[init] init is called");
         // add task0
-        //std::shared_ptr<task_base> tmp_task_ptr_t = std::shared_ptr<manager_task>(new manager_task(std::string(TASK0)));
         task_ptr_t tmp_task_ptr_t = std::static_pointer_cast<task_base>(std::make_shared<manager_task>(std::string(TASK0)));
         add_tasks(tmp_task_ptr_t);
 

@@ -10,12 +10,14 @@ class redis_command
     using key_type = std::remove_const_t<std::remove_reference_t<T.key>>;
     using value_type = std::remove_const_t<std::remove_reference_t<T.value>>;
 #else
-#define key_type (T.key)
-#define value_type (T.value)
+    //typedef decltype(T::key) key_type;
+    //typedef decltype(T::value) value_type
+//#define key_type decltype(T.key)
+//#define value_type decltype(T.value)
 #endif
     redis_command() = default;
 
-    static std::string get_command(T &&val)
+    static std::string get_command(T val)
     {
         switch (val.type)
         {
@@ -36,12 +38,12 @@ class redis_command
             {
             }
 #else
-            if (std::is_same<key_type, std::string>::value)
+            if (std::is_same<decltype(T::key), std::string>::value)
             {
-                if (std::is_same<key_type, std::string>::value)
+                if (std::is_same<decltype(T::msg_value), std::string>::value)
                 {
                     __LOG(debug, "Put command");
-                    return "SET " + val.key + " " + val.value;
+                    return "SET " + val.key + " " + val.msg_value;
                 }
             }
 #endif
@@ -60,5 +62,6 @@ class redis_command
             __LOG(warn, "unsupport message type!");
             break;
         }
+        return "";
     }
 };

@@ -70,5 +70,5 @@ struct command_container
 struct put_command_container : public command_container
 {
     std::string key;
-    std::string value;
+    std::string msg_value;
 };

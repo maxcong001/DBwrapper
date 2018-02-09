@@ -40,7 +40,7 @@ class Timer;
 class TimerManager
 {
   public:
-	TimerManager() : uniqueID_atomic(0), t_map(), audit_timer(NULL), _loop(loop), loop()
+	TimerManager() : uniqueID_atomic(1), t_map(), audit_timer(NULL), _loop(loop), loop()
 	{
 		init(true);
 		audit_timer = new Timer(_loop);

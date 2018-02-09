@@ -13,9 +13,11 @@ class worker_task : public task_base
         switch (task_msg.type)
         {
         case MSG_TYPE::TASK_REDIS_PUT:
+        {
             std::string command = TASK_ANY_CAST<std::string>(task_msg.body);
             __LOG(error, "get command " << command);
             break;
+        }
         case MSG_TYPE::TASK_REDIS_GET:
             break;
         case MSG_TYPE::TASK_REDIS_DEL:
@@ -26,6 +28,11 @@ class worker_task : public task_base
             break;
         case MSG_TYPE::TASK_REDIS_PING:
             break;
+#if 0
+        case MSG_TYPE::TASK_HB_REQ:
+            task_manager::instance()->send2task(TASK0, MSG_TYPE::TASK_HB_RSP, _name, 0);
+            break;
+#endif
         default:
             __LOG(warn, "unsupport message type!");
             break;

@@ -46,6 +46,7 @@ void task_base::process_msg(uint64_t num)
                 // this is HB message, send rsp
                 __LOG(debug, "task : " << _name << " send HB response to task0");
                 tmp.body = _name;
+                tmp.type = MSG_TYPE::TASK_HB_RSP;
                 task_manager::instance()->send2task(TASK0, tmp);
                 continue;
             }
