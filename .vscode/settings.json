@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "*.yml": "cpp",
+        "*.txt": "cpp",
+        "license": "cpp",
+        "*.md": "cpp",
+        "*.sh": "cpp",
+        "async.c": "cpp",
+        "dict.c": "cpp",
+        "hiredis.c": "cpp",
+        "net.c": "cpp",
+        "read.c": "cpp",
+        "sds.c": "cpp",
+        "test.c": "cpp"
+    }
+}
