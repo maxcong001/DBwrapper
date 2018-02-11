@@ -1,7 +1,8 @@
-[DBwrapper]
-master-branch :  [![Build Status](https://travis-ci.org/maxcong001/DBwrapper.svg?branch=master)](https://travis-ci.org/maxcong001/DBwrapper)
+# [DBwrapper]    
 
-dev-branch : [![Build Status](https://travis-ci.org/maxcong001/DBwrapper.svg?branch=dev)](https://travis-ci.org/maxcong001/DBwrapper)
+master-branch :  [![Build Status](https://travis-ci.org/maxcong001/DBwrapper.svg?branch=master)](https://travis-ci.org/maxcong001/DBwrapper)    
+dev-branch : [![Build Status](https://travis-ci.org/maxcong001/DBwrapper.svg?branch=dev)](https://travis-ci.org/maxcong001/DBwrapper)    
+
 ===================================
 
 Copyright Max Cong.
