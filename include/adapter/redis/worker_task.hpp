@@ -1,9 +1,9 @@
 #include "task_base/include.hpp"
 #include "command.hpp"
 #include <signal.h>
-#include <hiredis/hiredis.h>
-#include <hiredis/async.h>
-#include <hiredis/adapters/libevent.h>
+#include <adapter/hiredis/hiredis.h>
+#include <adapter/hiredis/async.h>
+#include <adapter/hiredis/adapters/libevent.h>
 
 void connectCallback(const struct redisAsyncContext *c, int status);
 void disconnectCallback(const struct redisAsyncContext *c, int status);
