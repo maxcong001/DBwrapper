@@ -24,13 +24,32 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "adapter/redis/interface.hpp"
-
+void connectCallback(const struct redisAsyncContext *c, int status)
+{
+    if (status != REDIS_OK)
+    {
+        __LOG(error, "Error: " << c->errstr);
+        return;
+    }
+    __LOG(debug, "Connected...\n");
+}
+void disconnectCallback(const struct redisAsyncContext *c, int status)
+{
+    if (status != REDIS_OK)
+    {
+        __LOG(error, "Error: " << c->errstr);
+        return;
+    }
+    __LOG(warn, "disConnected...\n");
+}
 int main()
 {
     // setup log related
     set_log_level(logger_iface::log_level::debug);
     redis_async_client client;
     client.init();
+    client.add_conn("127.0.0.1", 6379);
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     client.put();
     std::this_thread::sleep_for(std::chrono::seconds(20));
     __LOG(warn, "exit example in 30 secs");

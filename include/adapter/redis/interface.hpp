@@ -15,7 +15,7 @@ class redis_async_client
         // no blocking API
         ins->init(false);
     }
-    void put()
+    bool put()
     {
         put_command_container cmd_container;
         cmd_container.type = MSG_TYPE::TASK_REDIS_PUT;
@@ -24,6 +24,16 @@ class redis_async_client
 
         std::string command2send = redis_command<put_command_container>::get_command(cmd_container);
         ins->send2task(WORKER001, MSG_TYPE::TASK_REDIS_PUT, command2send);
+        return true;
+    }
+
+    bool add_conn(std::string ip, int port)
+    {
+        add_conn_payload add_cmd;
+        add_cmd.ip = ip;
+        add_cmd.port = port;
+        ins->send2task(WORKER001, MSG_TYPE::TASK_REDIS_ADD_CONN, add_cmd);
+        return true;
     }
     task_manager *ins;
 };

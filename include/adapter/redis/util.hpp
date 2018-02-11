@@ -72,3 +72,17 @@ struct put_command_container : public command_container
     std::string key;
     std::string msg_value;
 };
+
+
+enum class conn_status : std::uint32_t
+{
+    CONNECTED = 0,
+    CONNECTING,
+    DISCONNECTED
+};
+//  task payload definition
+struct add_conn_payload
+{
+    std::string ip;
+    int port;
+};

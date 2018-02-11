@@ -46,7 +46,8 @@ typedef std::shared_ptr<task_base> task_ptr_t;
 class task_manager
 {
   public:
-    task_manager() : _hb_itval(1000), _seq_id(0)
+  
+    task_manager() : _hb_itval(5000), _seq_id(0)
     {
     }
     static task_manager *instance()
@@ -199,6 +200,23 @@ class task_manager
         }
 
         return true;
+    }
+
+    task_ptr_t get_task_ptr_p_with_detail_info(const void *info)
+    {
+        for (auto it : task_map)
+        {
+            if (it.second->get_task_detail_info() == info)
+            {
+                return it.second;
+            }
+            else
+            {
+                return nullptr;
+                // no task with detail info equals to info
+            }
+        }
+        return nullptr;
     }
     void set_hb_interval(std::uint32_t _hb_itval)
     {

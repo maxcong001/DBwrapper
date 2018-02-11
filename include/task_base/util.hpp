@@ -29,7 +29,7 @@
 
 #define TASK0 "task0"
 
-enum class MSG_TYPE : unsigned int
+enum class MSG_TYPE : std::uint32_t
 {
     TASK_HB = 0,
     TASK_RESTART,
@@ -39,12 +39,13 @@ enum class MSG_TYPE : unsigned int
     TASK_PING,
 
     // APP ---> worker
-    TASK_ADD_CONN,
-    TASK_DEL_CONN,
+    TASK_REDIS_ADD_CONN,
+    TASK_REDIS_DEL_CONN,
     TASK_REDIS_PUT,
     TASK_REDIS_GET,
     TASK_REDIS_DEL,
     TASK_REDIS_PING,
+
     // worker ---> mamager task
     TASK_HB_RSP,
     TASK_REDIS_RESTART,
@@ -64,4 +65,4 @@ struct TASK_MSG
 };
 
 typedef std::queue<TASK_MSG> TASK_QUEUE;
-#define TASK_HB_INTERVAL 1000
+#define TASK_HB_INTERVAL 5000

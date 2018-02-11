@@ -23,7 +23,7 @@ bool manager_task::start_hb()
             //hb_map.clear();
             // first loop, there is no HB response
             // do nothing
-            __LOG(warn, "this is the first loop!");
+            __LOG(debug, "this is the first loop!");
             first_loop = false;
             return;
         }

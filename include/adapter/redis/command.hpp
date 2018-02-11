@@ -52,9 +52,9 @@ class redis_command
             break;
         case MSG_TYPE::TASK_REDIS_DEL:
             break;
-        case MSG_TYPE::TASK_ADD_CONN:
+        case MSG_TYPE::TASK_REDIS_ADD_CONN:
             break;
-        case MSG_TYPE::TASK_DEL_CONN:
+        case MSG_TYPE::TASK_REDIS_DEL_CONN:
             break;
         case MSG_TYPE::TASK_REDIS_PING:
             break;

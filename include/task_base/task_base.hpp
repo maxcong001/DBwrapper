@@ -78,6 +78,14 @@ class task_base
     {
         return _name;
     }
+    void *get_task_detail_info()
+    {
+        return _detail_info;
+    }
+    void set_task_detail_info(void *info)
+    {
+        _detail_info = info;
+    }
     virtual void set_hb_interval(std::uint32_t interval)
     {
         _hb_itval = interval;
@@ -88,6 +96,7 @@ class task_base
     TASK_QUEUE _tmp_task_queue;
     // task name
     std::string _name;
+    // task ID
     int _evfd;
     // note: do not change the sequence of _loop and _event_server
     // _event_server should distructure first!!!!
@@ -95,4 +104,5 @@ class task_base
     std::shared_ptr<translib::EventFdServer> _event_server;
     // timer.
     translib::TimerManager _timer_mgr;
+    void *_detail_info;
 };
