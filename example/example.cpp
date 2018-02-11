@@ -52,5 +52,5 @@ int main()
     std::this_thread::sleep_for(std::chrono::seconds(1));
     client.put();
     std::this_thread::sleep_for(std::chrono::seconds(20));
-    __LOG(warn, "exit example in 30 secs");
+    __LOG(warn, "exit example in 20 secs");
 }
