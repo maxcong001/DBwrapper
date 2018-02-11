@@ -4,7 +4,7 @@ language: cpp
 branches:
   only:
   - master
-  - dev-branch
+  - dev
 
 compiler:
   - gcc
