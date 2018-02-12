@@ -6,9 +6,10 @@ template <typename COMMAND_KEY, typename COMMAND_VALUE, typename COMMAND_ARGS = 
 class redis_command
 {
   public:
+#if __cplusplus >= 201703L
     using key_type = std::remove_const_t<std::remove_reference_t<COMMAND_KEY>>;
     using value_type = std::remove_const_t<std::remove_reference_t<COMMAND_VALUE>>;
-
+#endif
     redis_command() = default;
 
     static std::string get_command(MSG_TYPE type, COMMAND_KEY key, COMMAND_VALUE value, COMMAND_ARGS args = nullptr) // to do COMMAND_ARGS... args)
