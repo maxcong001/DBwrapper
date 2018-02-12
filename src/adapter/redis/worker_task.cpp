@@ -40,12 +40,16 @@ void disconnectCallback(const struct redisAsyncContext *c, int status)
     {
         __LOG(warn, "there is no worker_ptr_p in the task manager!!!!");
     }
-    __LOG(warn, "disConnected...\n");
+    __LOG(warn, "disConnected...");
 }
 void onMassageCallback(redisAsyncContext *c, void *r, void *privdata)
 {
+
     redisReply *reply = (redisReply *)r;
     if (reply == NULL)
+    {
         return;
+    }
     __LOG(warn, "get message back: private data ptr : " << (void *)privdata << " data is " << reply->str);
+
 }

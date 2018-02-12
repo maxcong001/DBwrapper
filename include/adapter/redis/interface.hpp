@@ -17,12 +17,7 @@ class redis_async_client
     }
     bool put()
     {
-        put_command_container cmd_container;
-        cmd_container.type = MSG_TYPE::TASK_REDIS_PUT;
-        cmd_container.key = std::string("test_key");
-        cmd_container.msg_value = std::string("test_value");
-
-        std::string command2send = redis_command<put_command_container>::get_command(cmd_container);
+        std::string command2send = redis_command<std::string, std::string>::get_command(MSG_TYPE::TASK_REDIS_PUT, std::string("test_key"), std::string("test_value"));
         ins->send2task(WORKER001, MSG_TYPE::TASK_REDIS_PUT, command2send);
         return true;
     }

@@ -2,33 +2,28 @@
 #include "util.hpp"
 
 // interface form APP API to redis RSP message
-template <typename T>
+template <typename COMMAND_KEY, typename COMMAND_VALUE, typename COMMAND_ARGS = std::nullptr_t> // to do typename... COMMAND_ARGS>
 class redis_command
 {
   public:
 #if __cplusplus >= 201703L
-    using key_type = std::remove_const_t<std::remove_reference_t<T.key>>;
-    using value_type = std::remove_const_t<std::remove_reference_t<T.value>>;
-#else
-    //typedef decltype(T::key) key_type;
-    //typedef decltype(T::value) value_type
-//#define key_type decltype(T.key)
-//#define value_type decltype(T.value)
+    using key_type = std::remove_const_t<std::remove_reference_t<COMMAND_KEY>>;
+    using value_type = std::remove_const_t<std::remove_reference_t<COMMAND_VALUE>>;
 #endif
     redis_command() = default;
 
-    static std::string get_command(T val)
+    static std::string get_command(MSG_TYPE type, COMMAND_KEY key, COMMAND_VALUE value, COMMAND_ARGS args = nullptr) // to do COMMAND_ARGS... args)
     {
-        switch (val.type)
+        switch (type)
         {
         case MSG_TYPE::TASK_REDIS_PUT:
 #if __cplusplus >= 201703L
-            if constexpr (detail::is_string_v<key_type>)
+            if constexpr (detail::is_string_v<COMMAND_KEY>)
             {
-                if constexpr (detail::is_string_v<value_type>)
+                if constexpr (detail::is_string_v<COMMAND_VALUE>)
                 {
+                    return "SET " + key + " " + value;
                     __LOG(debug, "");
-                    return "SET " + val.key + " " + val.value;
                 }
                 else
                 {
@@ -38,12 +33,12 @@ class redis_command
             {
             }
 #else
-            if (std::is_same<decltype(T::key), std::string>::value)
+            if (std::is_same<COMMAND_KEY, std::string>::value)
             {
-                if (std::is_same<decltype(T::msg_value), std::string>::value)
+                if (std::is_same<COMMAND_VALUE, std::string>::value)
                 {
                     __LOG(debug, "Put command");
-                    return "SET " + val.key + " " + val.msg_value;
+                    return "SET " + key + " " + value;
                 }
             }
 #endif
