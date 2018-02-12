@@ -16,7 +16,7 @@ class redis_command
         switch (type)
         {
         case MSG_TYPE::TASK_REDIS_PUT:
-
+#if __cplusplus >= 201703L
             if constexpr (detail::is_string_v<COMMAND_KEY>)
             {
                 if constexpr (detail::is_string_v<COMMAND_VALUE>)
@@ -31,7 +31,16 @@ class redis_command
             else
             {
             }
-
+#else
+            if (std::is_same<decltype(COMMAND_KEY), std::string>::value)
+            {
+                if (std::is_same<decltype(COMMAND_VALUE), std::string>::value)
+                {
+                    __LOG(debug, "Put command");
+                    return "SET " + key + " " + value;
+                }
+            }
+#endif
             break;
         case MSG_TYPE::TASK_REDIS_GET:
             break;

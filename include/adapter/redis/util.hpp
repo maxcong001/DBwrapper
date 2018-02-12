@@ -24,7 +24,7 @@ struct TASK_DEL_CONN_MSG
 };
 namespace detail
 {
-
+#if __cplusplus >= 201703L
 template <typename T>
 constexpr bool is_int64_v = std::is_same_v<T, std::int64_t>;
 
@@ -40,7 +40,7 @@ constexpr bool is_string_v = std::is_same_v<T, std::string>;
 template <typename T>
 constexpr bool is_cstr_v = std::is_same_v<T, const char *>;
 }
-
+#endif
 typedef std::function<void(void)> redis_user_cb;
 struct command_container
 {
