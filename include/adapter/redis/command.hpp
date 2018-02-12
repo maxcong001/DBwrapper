@@ -33,9 +33,9 @@ class redis_command
             {
             }
 #else
-            if (std::is_same<decltype(COMMAND_KEY), std::string>::value)
+            if (std::is_same<COMMAND_KEY, std::string>::value)
             {
-                if (std::is_same<decltype(COMMAND_VALUE), std::string>::value)
+                if (std::is_same<COMMAND_VALUE, std::string>::value)
                 {
                     __LOG(debug, "Put command");
                     return "SET " + key + " " + value;
