@@ -24,8 +24,8 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - libevent-dev
-      - gcc-7
-      - g++-7
+#      - gcc-4.8
+#      - g++-4.8
       - libboost-all-dev
 
 before_install:
