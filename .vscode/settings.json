@@ -12,5 +12,6 @@
         "read.c": "cpp",
         "sds.c": "cpp",
         "test.c": "cpp"
-    }
+    },
+    "C_Cpp.intelliSenseEngineFallback": "Disabled"
 }

@@ -1,0 +1,1 @@
+/usr/bin/c++   -g2 -Wall -std=c++11 -fPIC -lpthread  -rdynamic CMakeFiles/_DBwrapper_tests.dir/example.cpp.o  -o ../bin/DBwrapper_tests -Wl,-rpath,/home/max/github/DBwrapper/lib ../../lib/libDBwrapper.so.1.0.0 -lpthread -levent -levent_pthreads -lboost_system 
