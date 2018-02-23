@@ -13,5 +13,5 @@
         "sds.c": "cpp",
         "test.c": "cpp"
     },
-    "C_Cpp.intelliSenseEngineFallback": "Disabled"
+    "C_Cpp.intelliSenseEngineFallback": "Enabled"
 }

@@ -1,9 +1,7 @@
 #include "task_base/include.hpp"
 #include "command.hpp"
 #include <signal.h>
-#include <adapter/redis/hiredis/hiredis.h>
-#include <adapter/redis/hiredis/async.h>
-#include <adapter/redis/hiredis/adapters/libevent.h>
+#include "util.hpp"
 
 void connectCallback(const struct redisAsyncContext *c, int status);
 void disconnectCallback(const struct redisAsyncContext *c, int status);
@@ -25,9 +23,16 @@ class worker_task : public task_base
         {
         case MSG_TYPE::TASK_REDIS_PUT:
         {
-            std::string command = TASK_ANY_CAST<std::string>(task_msg.body);
-            __LOG(debug, "get command " << command);
-            redisAsyncCommand(_context, onMassageCallback, NULL, command.c_str());
+            TASK_REDIS_PUT_MSG msg = TASK_ANY_CAST<TASK_REDIS_PUT_MSG>(task_msg.body);
+            __LOG(debug, "get command " << msg.body);
+            redisAsyncCommand(_context, msg.cb, msg.usr_data, msg.body.c_str());
+            break;
+        }
+        case MSG_TYPE::TASK_REDIS_RAW:
+        {
+            TASK_REDIS_RAW_MSG msg = TASK_ANY_CAST<TASK_REDIS_RAW_MSG>(task_msg.body);
+            __LOG(debug, "get command " << msg.body);
+            redisAsyncCommand(_context, msg.cb, msg.usr_data, msg.body.c_str());
             break;
         }
         case MSG_TYPE::TASK_REDIS_GET:

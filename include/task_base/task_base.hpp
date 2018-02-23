@@ -90,6 +90,16 @@ class task_base
     {
         _hb_itval = interval;
     }
+
+    translib::Timer::ptr_p getTimer(int *timerID = NULL)
+    {
+        return _timer_mgr.getTimer(timerID);
+    }
+    bool killTimer(int timerID)
+    {
+        return _timer_mgr.killTimer(timerID);
+    }
+
     std::uint32_t _hb_itval;
     std::mutex mtx;
     TASK_QUEUE _task_queue;

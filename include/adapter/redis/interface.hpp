@@ -15,19 +15,31 @@ class redis_async_client
         // no blocking API
         ins->init(false);
     }
-    bool put()
+    bool put(std::string key, std::string value, void *usr_data, redisCallbackFn *fn)
     {
-        std::string command2send = redis_command<std::string, std::string>::get_command(MSG_TYPE::TASK_REDIS_PUT, std::string("test_key"), std::string("test_value"));
-        ins->send2task(WORKER001, MSG_TYPE::TASK_REDIS_PUT, command2send);
+        std::string command2send = redis_command<std::string, std::string>::get_command(MSG_TYPE::TASK_REDIS_PUT, key, value);
+        TASK_REDIS_PUT_MSG msg;
+        msg.cb = fn;
+        msg.body = command2send;
+        msg.usr_data = usr_data;
+        ins->send2task(WORKER001, MSG_TYPE::TASK_REDIS_PUT, msg);
         return true;
     }
-
     bool add_conn(std::string ip, int port)
     {
         add_conn_payload add_cmd;
         add_cmd.ip = ip;
         add_cmd.port = port;
         ins->send2task(WORKER001, MSG_TYPE::TASK_REDIS_ADD_CONN, add_cmd);
+        return true;
+    }
+    bool send_raw_command(std::string command, void *usr_data, redisCallbackFn *fn)
+    {
+        TASK_REDIS_RAW_MSG msg;
+        msg.cb = fn;
+        msg.body = command;
+        msg.usr_data = usr_data;
+        ins->send2task(WORKER001, MSG_TYPE::TASK_REDIS_RAW, msg);
         return true;
     }
     task_manager *ins;
