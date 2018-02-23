@@ -21,24 +21,24 @@ class worker_task : public task_base
     {
         switch (task_msg.type)
         {
-        case MSG_TYPE::TASK_REDIS_PUT:
+        case MSG_TYPE::TASK_REDIS_FORMAT_RAW:
         {
-            TASK_REDIS_PUT_MSG msg = TASK_ANY_CAST<TASK_REDIS_PUT_MSG>(task_msg.body);
-            __LOG(debug, "get command " << msg.body);
-            redisAsyncCommand(_context, msg.cb, msg.usr_data, msg.body.c_str());
+            TASK_REDIS_FORMAT_RAW_MSG msg = TASK_ANY_CAST<TASK_REDIS_FORMAT_RAW_MSG>(task_msg.body);
+            __LOG(debug, "get command :\n"
+                             << msg.body);
+            redisAsyncFormattedCommand(_context, msg.cb, msg.usr_data, msg.body.c_str(), msg.body.size());
             break;
         }
+
         case MSG_TYPE::TASK_REDIS_RAW:
         {
             TASK_REDIS_RAW_MSG msg = TASK_ANY_CAST<TASK_REDIS_RAW_MSG>(task_msg.body);
-            __LOG(debug, "get command " << msg.body);
+            __LOG(debug, "get command :\n"
+                             << msg.body);
             redisAsyncCommand(_context, msg.cb, msg.usr_data, msg.body.c_str());
             break;
         }
-        case MSG_TYPE::TASK_REDIS_GET:
-            break;
-        case MSG_TYPE::TASK_REDIS_DEL:
-            break;
+
         case MSG_TYPE::TASK_REDIS_ADD_CONN:
             process_add_conn(task_msg);
             break;

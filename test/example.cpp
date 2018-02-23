@@ -30,7 +30,7 @@ int main()
 	// setup log related
 	set_log_level(logger_iface::log_level::debug);
 
-	std::string command2send = redis_command<std::string, std::string, std::string>::get_command(MSG_TYPE::TASK_REDIS_PUT, std::string("test_key"), std::string("test_value"), std::string("args"));
+	std::string command2send = redis_command<std::string, std::string, std::string>::get_format_command(MSG_TYPE::TASK_REDIS_PUT, std::string("test_key"), std::string("test_value"), std::string("args"));
 	__LOG(warn, "command :"<<command2send);
 
 	__LOG(warn, "exit example in 30 secs");

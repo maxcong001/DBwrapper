@@ -62,6 +62,8 @@ int main()
     client.add_conn("127.0.0.1", 6379);
     std::this_thread::sleep_for(std::chrono::seconds(1));
     client.put("test_key", "test_value", NULL, on_message_arrive_cb);
+
+    client.send_raw_command("SET test_raw_key test_raw_value", NULL, on_message_arrive_cb);
     std::this_thread::sleep_for(std::chrono::seconds(20));
     __LOG(warn, "exit example in 20 secs");
 }
