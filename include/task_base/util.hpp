@@ -41,6 +41,8 @@ enum class MSG_TYPE : std::uint32_t
     // APP ---> worker
     TASK_REDIS_ADD_CONN,
     TASK_REDIS_DEL_CONN,
+    TASK_REDIS_RAW,
+    TASK_REDIS_FORMAT_RAW,
     TASK_REDIS_PUT,
     TASK_REDIS_GET,
     TASK_REDIS_DEL,

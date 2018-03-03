@@ -42,15 +42,28 @@ void disconnectCallback(const struct redisAsyncContext *c, int status)
     }
     __LOG(warn, "disConnected...\n");
 }
+void on_message_arrive_cb(struct redisAsyncContext *ac, void *r, void *usr_data)
+{
+    redisReply *reply = (redisReply *)r;
+    if (reply == NULL)
+    {
+        return;
+    }
+    __LOG(warn, "get message back: usr_data ptr : " << (void *)usr_data << ". Data is " << reply->str);
+}
+
 int main()
 {
     // setup log related
     set_log_level(logger_iface::log_level::debug);
     redis_async_client client;
+
     client.init();
     client.add_conn("127.0.0.1", 6379);
     std::this_thread::sleep_for(std::chrono::seconds(1));
-    client.put();
+    client.put("test_key", "test_value", NULL, on_message_arrive_cb);
+
+    client.send_raw_command("SET test_raw_key test_raw_value", NULL, on_message_arrive_cb);
     std::this_thread::sleep_for(std::chrono::seconds(20));
     __LOG(warn, "exit example in 20 secs");
 }

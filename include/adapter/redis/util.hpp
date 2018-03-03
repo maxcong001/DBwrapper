@@ -2,9 +2,30 @@
 #include "task_base/include.hpp"
 #include <type_traits>
 #include <cstddef>
+#include <adapter/redis/hiredis/hiredis.h>
+#include <adapter/redis/hiredis/async.h>
+#include <adapter/redis/hiredis/adapters/libevent.h>
+#include <string>
+#include <list>
+#include <iostream>
+#include <sstream>
 #define WORKER001 "WORKER001"
+struct TASK_REDIS_FORMAT_RAW_MSG
+{
+    void *usr_data;
+    redisCallbackFn *cb;
+    std::string body;
+};
+struct TASK_REDIS_RAW_MSG
+{
+    void *usr_data;
+    redisCallbackFn *cb;
+    std::string body;
+};
 struct TASK_REDIS_PUT_MSG
 {
+    void *usr_data;
+    redisCallbackFn *cb;
     std::string body;
 };
 struct TASK_REDIS_GET_MSG
